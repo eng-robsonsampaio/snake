@@ -7,7 +7,7 @@ UP = 0
 DOWN = 1
 LEFT = 2
 RIGHT = 3
-
+delay = 0.05
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 game_on =  True
@@ -43,24 +43,25 @@ while game_on:
             elif event.key==K_RIGHT:
                 my_direction = RIGHT
                 print("RIGHT")
-                
 
+    if snake[len(snake)-1][0] == 600 or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == 600 or snake[len(snake)-1][1] == -10:
+        print("Game over")
     # [( x, y )]
     # (200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
     if my_direction == RIGHT:
-        sleep(0.5)
+        sleep(delay)
         snake.append((snake[len(snake)-1][0] + 10 , snake[len(snake)-1][1]))
         snake.pop(0)
     elif my_direction == UP:
-        sleep(0.5)
+        sleep(delay)
         snake.append((snake[len(snake)-1][0] , snake[len(snake)-1][1] - 10))
         snake.pop(0)
     elif my_direction == DOWN:
-        sleep(0.5)
+        sleep(delay)
         snake.append((snake[len(snake)-1][0] , snake[len(snake)-1][1] + 10))
         snake.pop(0)
     elif my_direction == LEFT:        
-        sleep(0.5)
+        sleep(delay)
         snake.append((snake[len(snake)-1][0] - 10 , snake[len(snake)-1][1]))
         snake.pop(0)
     
