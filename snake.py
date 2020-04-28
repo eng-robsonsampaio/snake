@@ -1,6 +1,5 @@
 import pygame
 import random
-from time import sleep
 from pygame.locals import *
 
 UP = 0
@@ -12,25 +11,32 @@ pygame.init()
 screen = pygame.display.set_mode((600, 600))
 game_on =  True
 
-# snake = [(x, y)]
+# snake = [(x, y),   (x+n, y),   (x+2n, y)]
 snake = [(200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
 snake_skin = pygame.Surface((10, 10))
 snake_skin.fill((255, 255, 255))
 
+# apple
 apple = pygame.Surface((10,10))
 apple.fill((255,0,0))
-apple_pos = (random.randint(0, 590), random.randint(0, 590))
+apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
+# apple_pos = ((300, 200))
 
 my_direction  = RIGHT
 
-while game_on:
+clock = pygame.time.Clock()
 
+def collision(pos1, pos2):
+    return (pos1[0] == pos2[0] and pos1[1] == pos2[1])
+
+while game_on:
+    clock.tick(20)
     pressed = pygame.key.get_pressed()
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == QUIT:
             pygame.quit()
             game_on = False
-        if event.type == pygame.KEYDOWN:
+        if event.type == KEYDOWN:
             if event.key==K_UP:
                 my_direction = UP
                 print("UP")
@@ -46,22 +52,25 @@ while game_on:
 
     if snake[len(snake)-1][0] == 600 or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == 600 or snake[len(snake)-1][1] == -10:
         print("Game over")
+        pygame.quit()
+        game_on = False
+    
+    if collision(snake[len(snake)-1], apple_pos):
+        apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
+        snake.insert(0,(0,0))
+
     # [( x, y )]
     # (200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
     if my_direction == RIGHT:
-        sleep(delay)
         snake.append((snake[len(snake)-1][0] + 10 , snake[len(snake)-1][1]))
         snake.pop(0)
     elif my_direction == UP:
-        sleep(delay)
         snake.append((snake[len(snake)-1][0] , snake[len(snake)-1][1] - 10))
         snake.pop(0)
     elif my_direction == DOWN:
-        sleep(delay)
         snake.append((snake[len(snake)-1][0] , snake[len(snake)-1][1] + 10))
         snake.pop(0)
     elif my_direction == LEFT:        
-        sleep(delay)
         snake.append((snake[len(snake)-1][0] - 10 , snake[len(snake)-1][1]))
         snake.pop(0)
     
