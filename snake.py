@@ -27,7 +27,11 @@ my_direction  = RIGHT
 clock = pygame.time.Clock()
 
 def collision(pos1, pos2):
-    return (pos1[0] == pos2[0] and pos1[1] == pos2[1])
+    # return (pos1[0] == pos2[0] and pos1[1] == pos2[1])
+    return pos1 == pos2
+
+def snake_tail_collision(head, tail):
+    return (head in tail)
 
 while game_on:
     clock.tick(20)
@@ -37,16 +41,16 @@ while game_on:
             pygame.quit()
             game_on = False
         if event.type == KEYDOWN:
-            if event.key==K_UP:
+            if event.key==K_UP and my_direction != DOWN:
                 my_direction = UP
                 print("UP")
-            elif event.key==K_LEFT:
+            elif event.key==K_LEFT and my_direction != RIGHT:
                 my_direction = LEFT
                 print("LEFT")
-            elif event.key==K_DOWN:
+            elif event.key==K_DOWN and my_direction != UP:
                 my_direction = DOWN
                 print("DOWN")
-            elif event.key==K_RIGHT:
+            elif event.key==K_RIGHT and my_direction != LEFT:
                 my_direction = RIGHT
                 print("RIGHT")
 
@@ -58,6 +62,11 @@ while game_on:
     if collision(snake[len(snake)-1], apple_pos):
         apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
         snake.insert(0,(0,0))
+    
+    if snake_tail_collision(snake[len(snake)-1], snake[0:len(snake)-2]):
+        print("Game over")
+        pygame.quit()
+        game_on = False
 
     # [( x, y )]
     # (200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
