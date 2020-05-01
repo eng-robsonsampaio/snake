@@ -6,7 +6,7 @@ UP = 0
 DOWN = 1
 LEFT = 2
 RIGHT = 3
-delay = 0.05
+DELAY = 10
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 game_on =  True
@@ -26,15 +26,14 @@ my_direction  = RIGHT
 
 clock = pygame.time.Clock()
 
-def collision(pos1, pos2):
-    # return (pos1[0] == pos2[0] and pos1[1] == pos2[1])
+def grabing_apple(pos1, pos2):
     return pos1 == pos2
 
 def snake_tail_collision(head, tail):
     return (head in tail)
 
 while game_on:
-    clock.tick(20)
+    clock.tick(DELAY)
     pressed = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -59,9 +58,10 @@ while game_on:
         pygame.quit()
         game_on = False
     
-    if collision(snake[len(snake)-1], apple_pos):
+    if grabing_apple(snake[len(snake)-1], apple_pos):
         apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
         snake.insert(0,(0,0))
+        DELAY += 1
     
     if snake_tail_collision(snake[len(snake)-1], snake[0:len(snake)-2]):
         print("Game over")
