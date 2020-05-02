@@ -2,16 +2,67 @@ import pygame
 import random
 from pygame.locals import *
 
+class Snake():
+
+    def __init__(self, lenght=5):
+        """
+        height: y height
+        """
+        self.lenght = lenght
+        self.snake = [(240, 200), (230, 200), (220, 200), (210, 200), (200, 200)]
+        self.snake_skin = pygame.Surface((10, 10)).fill((255, 255, 255))
+
+    def snake_walk(self):
+        self.snake.append((0,0))
+        self.lenght += 1
+        self.snake.pop()
+
+    def collision(self):
+        return self.snake[0] in self.snake[1:self.lenght-1]
+    
+    def snake_hit_the_wall(self, wall):
+        return self.snake in wall
+
+
+class Screen:
+
+    def __init__(self, height, lenght):
+        """
+        height: y height
+        lenght: x lenght
+        """
+        self.screen_size  = (height, lenght)
+        self.screen = pygame.display.set_mode(self.screen_size)
+
+class Apple:
+
+    def __init__(self, height, lenght, screen_size):
+        """
+        height: y height
+        lenght: x lenght
+        """
+        self.height = height
+        self.lenght = lenght
+        self.screen_size = screen_size
+        self.apple_size = (height, lenght)
+        self.apple = pygame.Surface(self.apple_size).fill((255, 0, 0)) 
+
+    def set_apple_position(self):
+        return (random.randrange(0, self.screen_size[1]-self.lenght, self.lenght), random.randrange(0, self.screen_size[1]-self.lenght, self.lenght))
+
+
 UP = 0
 DOWN = 1
 LEFT = 2
 RIGHT = 3
 DELAY = 10
+
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 game_on =  True
 
 # snake = [(x, y),   (x+n, y),   (x+2n, y)]
+# snake = Snake()
 snake = [(200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
 snake_skin = pygame.Surface((10, 10))
 snake_skin.fill((255, 255, 255))
