@@ -28,7 +28,7 @@ class Snake:
         return self.snake[self.lenght-1] == apple_pos
     
     def snake_bigger(self):
-        self.snake.insert(0,(0,0))
+        self.snake.insert(0,(self.snake[0][0],self.snake[1][1]))
         self.lenght += 1
     
     def tail_collision(self):
@@ -66,7 +66,4 @@ class Snake:
             elif pygame.key.get_focused() and event.key==K_RIGHT and self.my_direction != LEFT:
                 self.my_direction = RIGHT
                 print("RIGHT")
-            # elif pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
-            #     pause_game(True)
-            #     print("Press space to continue")
         return True
