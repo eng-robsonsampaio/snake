@@ -14,5 +14,7 @@ class Apple:
     
     def set_random_position(self, screen_size):
         self.position = (random.randrange(0, screen_size-10, 10), random.randrange(0, screen_size-10, 10))
+        print(self.position)
+    
     
     
