@@ -1,6 +1,7 @@
 import pygame
 import random
 from pygame.locals import *
+from apple import *
 
 UP = 0
 DOWN = 1
@@ -8,8 +9,8 @@ LEFT = 2
 RIGHT = 3
 DELAY = 10
 pygame.init()
-sreen_size = 400
-screen_game = pygame.display.set_mode((sreen_size, sreen_size))
+screen_size = 400
+screen_game = pygame.display.set_mode((screen_size, screen_size))
 game_on =  True
 
 # snake = [(x, y),   (x+n, y),   (x+2n, y)]
@@ -18,9 +19,12 @@ snake_skin = pygame.Surface((10, 10))
 snake_skin.fill((255, 255, 255))
 
 # apple
-apple = pygame.Surface((10,10))
-apple.fill((255,0,0))
-apple_pos = (random.randrange(0, sreen_size-10, 10), random.randrange(0, sreen_size-10, 10))
+# apple = pygame.Surface((10,10))
+# apple.fill((255,0,0))
+# apple_pos = (random.randrange(0, screen_size-10, 10), random.randrange(0, screen_size-10, 10))
+
+apple = Apple(screen_size)
+apple.set_random_position(screen_size)
 
 points = 0
 
@@ -71,20 +75,16 @@ while game_on:
                 print("RIGHT")
             elif pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
                 pause_game(True)
-                # print("Press space to continue")
+                print("Press space to continue")
 
-    # while paused:
-    #     for event in pygame.event.get():
-    #         if pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
-    #             paused = False
-
-    if snake[len(snake)-1][0] == sreen_size or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == sreen_size or snake[len(snake)-1][1] == -10:
+    if snake[len(snake)-1][0] == screen_size or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == screen_size or snake[len(snake)-1][1] == -10:
         print("Game over")
         pygame.quit()
         game_on = False
     
-    if grabing_apple(snake[len(snake)-1], apple_pos):
-        apple_pos = (random.randrange(0, sreen_size-10, 10), random.randrange(0, sreen_size-10, 10))
+    if grabing_apple(snake[len(snake)-1], apple.position):
+        # apple.position = (random.randrange(0, screen_size-10, 10), random.randrange(0, screen_size-10, 10))
+        apple.set_random_position(screen_size)
         snake.insert(0,(0,0))
         DELAY += 0.5
         points += 1
@@ -112,7 +112,7 @@ while game_on:
     
     screen_game.fill((30,30,30))
     score(points)
-    screen_game.blit(apple, apple_pos)
+    screen_game.blit(apple.surface, apple.position)
     for snake_pos in snake:
         screen_game.blit(snake_skin, snake_pos)
         
