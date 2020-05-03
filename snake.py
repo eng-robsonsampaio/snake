@@ -8,7 +8,8 @@ LEFT = 2
 RIGHT = 3
 DELAY = 10
 pygame.init()
-screen = pygame.display.set_mode((600, 600))
+sreen_size = 400
+screen_game = pygame.display.set_mode((sreen_size, sreen_size))
 game_on =  True
 
 # snake = [(x, y),   (x+n, y),   (x+2n, y)]
@@ -19,11 +20,16 @@ snake_skin.fill((255, 255, 255))
 # apple
 apple = pygame.Surface((10,10))
 apple.fill((255,0,0))
-apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
-# apple_pos = ((300, 200))
+apple_pos = (random.randrange(0, sreen_size-10, 10), random.randrange(0, sreen_size-10, 10))
+
+points = 0
+
+def score(score):
+    font = pygame.font.SysFont("comicsansms", 24)
+    text = font.render("Score: "+str(score), True, (0, 128, 0))
+    screen_game.blit(text, (20,5))
 
 my_direction  = RIGHT
-
 clock = pygame.time.Clock()
 
 def grabing_apple(pos1, pos2):
@@ -32,9 +38,20 @@ def grabing_apple(pos1, pos2):
 def snake_tail_collision(head, tail):
     return (head in tail)
 
+paused = False
+def pause_game(paused):
+    """
+    Press SPACE to pause and again to continue
+    """
+    while paused:
+        for event in pygame.event.get():
+            if pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
+                paused = False
+
+
 while game_on:
     clock.tick(DELAY)
-    pressed = pygame.key.get_pressed()
+    # pressed = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -52,18 +69,28 @@ while game_on:
             elif event.key==K_RIGHT and my_direction != LEFT:
                 my_direction = RIGHT
                 print("RIGHT")
+            elif pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
+                pause_game(True)
+                # print("Press space to continue")
 
-    if snake[len(snake)-1][0] == 600 or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == 600 or snake[len(snake)-1][1] == -10:
+    # while paused:
+    #     for event in pygame.event.get():
+    #         if pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
+    #             paused = False
+
+    if snake[len(snake)-1][0] == sreen_size or snake[len(snake)-1][0] == -10 or snake[len(snake)-1][1] == sreen_size or snake[len(snake)-1][1] == -10:
         print("Game over")
         pygame.quit()
         game_on = False
     
     if grabing_apple(snake[len(snake)-1], apple_pos):
-        apple_pos = (random.randrange(0, 590, 10), random.randrange(0, 590, 10))
+        apple_pos = (random.randrange(0, sreen_size-10, 10), random.randrange(0, sreen_size-10, 10))
         snake.insert(0,(0,0))
-        DELAY += 1
+        DELAY += 0.5
+        points += 1
     
     if snake_tail_collision(snake[len(snake)-1], snake[0:len(snake)-2]):
+        print("Tails collision")
         print("Game over")
         pygame.quit()
         game_on = False
@@ -83,9 +110,10 @@ while game_on:
         snake.append((snake[len(snake)-1][0] - 10 , snake[len(snake)-1][1]))
         snake.pop(0)
     
-    screen.fill((0,0,0))
-    screen.blit(apple, apple_pos)
+    screen_game.fill((30,30,30))
+    score(points)
+    screen_game.blit(apple, apple_pos)
     for snake_pos in snake:
-        screen.blit(snake_skin, snake_pos)
-
+        screen_game.blit(snake_skin, snake_pos)
+        
     pygame.display.update()
