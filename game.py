@@ -1,8 +1,11 @@
+import sys
 import pygame
 import random
 from pygame.locals import *
 from apple import *
 from snake import *
+from settings import *
+from os import path 
 
 
 UP = 0
@@ -14,7 +17,7 @@ points = 0
 screen_size = 400
 game_on =  True
 paused = False
-
+highscore = 0
 pygame.init()
 screen_game = pygame.display.set_mode((screen_size, screen_size))
 
@@ -30,6 +33,20 @@ def score(score):
     font = pygame.font.SysFont("comicsansms", 24)
     text = font.render("Score: "+str(score), True, (0, 128, 0))
     screen_game.blit(text, (20,5))
+
+def read_high_score(highscore):
+    with open("highscore.txt", "r") as file:
+        highscore = file.read()
+        font = pygame.font.SysFont("comicsansms", 24)
+        text = font.render("High score: "+str(highscore), True, (0, 128, 0))
+        screen_game.blit(text, (200,5))
+
+def write_high_score(score):
+    with open("highscore.txt", "w+") as file:
+        print("Highscore: "+str(highscore))
+        if int(highscore) < score: 
+            print("escreve high score")
+            file.write(str(score))
 
 def pause_game(paused):
     """
@@ -63,6 +80,7 @@ while game_on:
     
     screen_game.fill((30,30,30))
     score(points)
+    read_high_score(highscore)
     screen_game.blit(apple.surface, apple.position)
 
     for snake_pos in snake.snake:
@@ -72,3 +90,4 @@ while game_on:
 pygame.quit()
 print("Game over")
 print("Scores: "+str(points))
+write_high_score(points)
