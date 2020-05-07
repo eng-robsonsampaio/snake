@@ -21,7 +21,7 @@ highscore = 0
 pygame.init()
 screen_game = pygame.display.set_mode((screen_size, screen_size))
 
-snake = Snake()
+snake = Snake(automatic=True)
 
 apple = Apple(screen_size)
 apple.set_random_position(screen_size)
@@ -56,11 +56,18 @@ def pause_game(paused):
         for event in pygame.event.get():
             if pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
                 paused = False
-
+start_time = pygame.time.get_ticks()
+start = datetime.now().replace(microsecond=0)
 while game_on:
     clock.tick(DELAY)
 
     snake.crawl()
+    snake.avoid_the_wall(screen_size)
+    snake.back_to_automatic(screen_size - 100)
+
+    if start_time + 300 < pygame.time.get_ticks():
+        snake.random_crawl()
+        start_time = pygame.time.get_ticks()
 
     for event in pygame.event.get():
         game_on = snake.handle_event(event)
@@ -68,9 +75,7 @@ while game_on:
             pause_game(True)
 
 
-    if snake.hit_the_wall(screen_size): game_on = False 
-    
-    if snake.tail_collision(): game_on = False
+    if snake.hit_the_wall(screen_size) or snake.tail_collision(): game_on = False 
     
     if snake.eat_apple(apple.position):
         apple.set_random_position(screen_size)
@@ -91,3 +96,4 @@ pygame.quit()
 print("Game over")
 print("Scores: "+str(points))
 write_high_score(points)
+print(f'\nElapsed time: {datetime.now().replace(microsecond=0) - start}')
