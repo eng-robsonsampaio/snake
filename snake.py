@@ -37,36 +37,35 @@ class Snake:
                 self.my_direction = [RIGHT, UP, DOWN][random.randint(0,2)]
 
     def back_to_automatic(self, screen_size):
-        if self.automatic == False and self.hit_the_wall(screen_size):
+        if self.automatic == False:
             self.automatic = True
 
-    
     def avoid_the_wall(self, screen_size):
-        x = self.snake[self.lenght-1][0]
-        y = self.snake[self.lenght-1][1]
-        dist = 10
+        dist = 30
         if self.automatic:
-            if self.my_direction == LEFT and x - dist < 0 or self.my_direction == RIGHT and x + dist >= screen_size:
-                self.automatic = 0
-                print(f"Automatic: {self.automatic}")
-                if y + dist >= screen_size:
+            if self.my_direction == LEFT and self.snake[self.lenght-1][0] - dist <= 0 or self.my_direction == RIGHT and self.snake[self.lenght-1][0] + dist >= screen_size:
+                self.automatic = False
+                print(f"Automatic UP DOWN: {self.automatic}")
+                print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
+                if self.snake[self.lenght-1][1] + dist >= screen_size:
                     self.my_direction = UP
-                elif y - dist <= 0:
+                elif self.snake[self.lenght-1][1] - dist <= 0:
                     self.my_direction = DOWN
                 else:                    
                     self.my_direction = [UP, DOWN][random.randint(0,1)]
                     print(f"Manual random: [UP, DOWN] {self.my_direction}")
-            elif self.my_direction == UP and y - dist < 0 or self.my_direction == DOWN and y + dist >= screen_size:
-                self.automatic = 0
-                print(f"Automatic: {self.automatic}")
-                if x + dist >= screen_size:
+            elif self.my_direction == UP and self.snake[self.lenght-1][1]- dist <= 0 or self.my_direction == DOWN and self.snake[self.lenght-1][1]+ dist >= screen_size:
+                self.automatic = False
+                print(f"Automatic LEFT RIGHT: {self.automatic}")
+                print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
+                if self.snake[self.lenght-1][0] + dist >= screen_size:
                     self.my_direction = LEFT
-                elif x - dist <= 0:
+                elif self.snake[self.lenght-1][0] - dist <= 0:
                     self.my_direction = RIGHT
                 else:
                     self.my_direction = [RIGHT, LEFT][random.randint(0,1)]
-                    print(f"Manual random: [UP, DOWN] {self.my_direction}")
-            # self.automatic = 1
+                    print(f"Manual random: [LEFT, RIGHT] {self.my_direction}")
+            self.automatic = True
 
 
     def get_position(self):
@@ -89,6 +88,7 @@ class Snake:
     def tail_collision(self):
         collision = self.snake[self.lenght-1] in self.snake[0:self.lenght-3]
         if collision:
+            print("Tail collision")
             print(self.snake)
             print(f"Head: {self.snake[self.lenght-1]}")
             print(f"Tail: {self.snake[0:self.lenght-2]}")
@@ -98,19 +98,17 @@ class Snake:
             return False
 
     def crawl(self):
-        x = self.snake[self.lenght-1][0]
-        y = self.snake[self.lenght-1][1]
         if self.my_direction == RIGHT:
-            self.snake.append((x + 10 , y))
+            self.snake.append((self.snake[self.lenght-1][0] + 10 , self.snake[self.lenght-1][1]))
             self.snake.pop(0)
         elif self.my_direction == UP:
-            self.snake.append((x , y - 10))
+            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]- 10))
             self.snake.pop(0)
         elif self.my_direction == DOWN:
-            self.snake.append((x , y + 10))
+            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]+ 10))
             self.snake.pop(0)
         elif self.my_direction == LEFT:        
-            self.snake.append((x - 10 , y))
+            self.snake.append((self.snake[self.lenght-1][0] - 10 , self.snake[self.lenght-1][1]))
             self.snake.pop(0)
         
         

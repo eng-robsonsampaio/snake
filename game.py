@@ -1,4 +1,5 @@
 import sys
+import json
 import pygame
 import random
 from pygame.locals import *
@@ -17,11 +18,10 @@ points = 0
 screen_size = 400
 game_on =  True
 paused = False
-highscore = 0
 pygame.init()
 screen_game = pygame.display.set_mode((screen_size, screen_size))
 
-snake = Snake(automatic=True)
+snake = Snake(automatic=False)
 
 apple = Apple(screen_size)
 apple.set_random_position(screen_size)
@@ -29,24 +29,23 @@ apple.set_random_position(screen_size)
 my_direction  = RIGHT
 clock = pygame.time.Clock()
 
+def read_score():
+    with open("highscore.json", "r") as file:
+        return json.loads(file.read())
+
+def save_score():
+    with open("highscore.json", "w") as file:
+        json.dump(highscore_json, file, indent = 4, sort_keys=True)
+
 def score(score):
     font = pygame.font.SysFont("comicsansms", 24)
     text = font.render("Score: "+str(score), True, (0, 128, 0))
     screen_game.blit(text, (20,5))
 
-def read_high_score(highscore):
-    with open("highscore.txt", "r") as file:
-        highscore = file.read()
-        font = pygame.font.SysFont("comicsansms", 24)
-        text = font.render("High score: "+str(highscore), True, (0, 128, 0))
-        screen_game.blit(text, (200,5))
-
-def write_high_score(score):
-    with open("highscore.txt", "w+") as file:
-        print("Highscore: "+str(highscore))
-        if int(highscore) < score: 
-            print("escreve high score")
-            file.write(str(score))
+def highscore(highscore):
+    font = pygame.font.SysFont("comicsansms", 24)
+    text = font.render("Highscore: "+str(highscore), True, (0, 128, 0))
+    screen_game.blit(text, (200,5))
 
 def pause_game(paused):
     """
@@ -56,18 +55,21 @@ def pause_game(paused):
         for event in pygame.event.get():
             if pygame.key.get_focused() and pygame.key.get_pressed()[K_SPACE]:
                 paused = False
+
+
 start_time = pygame.time.get_ticks()
 start = datetime.now().replace(microsecond=0)
+highscore_json = read_score()
 while game_on:
     clock.tick(DELAY)
 
     snake.crawl()
-    snake.avoid_the_wall(screen_size)
-    snake.back_to_automatic(screen_size - 100)
+    # snake.back_to_automatic(screen_size - 100)
 
-    if start_time + 300 < pygame.time.get_ticks():
+    if start_time + 500 < pygame.time.get_ticks():
         snake.random_crawl()
         start_time = pygame.time.get_ticks()
+    snake.avoid_the_wall(screen_size)
 
     for event in pygame.event.get():
         game_on = snake.handle_event(event)
@@ -85,7 +87,7 @@ while game_on:
     
     screen_game.fill((30,30,30))
     score(points)
-    read_high_score(highscore)
+    highscore(highscore_json["highscore"])
     screen_game.blit(apple.surface, apple.position)
 
     for snake_pos in snake.snake:
@@ -95,5 +97,7 @@ while game_on:
 pygame.quit()
 print("Game over")
 print("Scores: "+str(points))
-write_high_score(points)
+if points > highscore_json["highscore"]:
+    highscore_json["highscore"] = points
+    save_score()
 print(f'\nElapsed time: {datetime.now().replace(microsecond=0) - start}')
