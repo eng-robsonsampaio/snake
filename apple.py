@@ -13,7 +13,7 @@ class Apple:
         self.surface.fill(color)
     
     def set_random_position(self, screen_size):
-        self.position = (random.randrange(0, screen_size-10, 10), random.randrange(0, screen_size-10, 10))
+        self.position = (random.randrange(0, screen_size-10, 10), random.randrange(50, screen_size-10, 10))
         print(self.position)
     
     

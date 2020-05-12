@@ -67,7 +67,7 @@ class Snake:
         return self.snake
 
     def hit_the_wall(self, screen_size):
-        return self.snake[self.lenght-1][0] >= screen_size or self.snake[self.lenght-1][0] < 0 or self.snake[self.lenght-1][1] >= screen_size or self.snake[self.lenght-1][1] < 0
+        return self.snake[self.lenght-1][0] >= screen_size or self.snake[self.lenght-1][0] < 0 or self.snake[self.lenght-1][1] >= screen_size+50 or self.snake[self.lenght-1][1] < 50
 
     def eat_apple(self, apple_pos):
         return self.snake[self.lenght-1] == apple_pos
@@ -83,9 +83,9 @@ class Snake:
         if self.my_direction == RIGHT:
             self.snake.append((self.snake[self.lenght-1][0] + 10 , self.snake[self.lenght-1][1]))
         elif self.my_direction == UP:
-            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]- 10))
+            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1] - 10))
         elif self.my_direction == DOWN:
-            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]+ 10))
+            self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1] + 10))
         elif self.my_direction == LEFT:        
             self.snake.append((self.snake[self.lenght-1][0] - 10 , self.snake[self.lenght-1][1]))
         self.snake.pop(0)

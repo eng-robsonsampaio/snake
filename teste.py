@@ -1,18 +1,24 @@
 import math
 import json
 
-def read_highscore():
-    with open("highscore.json") as file:
-        return json.loads(file.read())
+with open("teste.json", "a") as file:
+    if not file.read():
+        json.dump(json.loads({"highscore":"0"}), file, indent=4)
+    else:
+        print(file.read())
 
-def save_highscore():
-    with open("highscore.json", "w") as file:
-        json.dump(jfile, file, indent = 4, sort_keys=True)
+# def read_highscore():
+#     with open("highscore.json") as file:
+#         return json.loads(file.read())
 
-jfile = read_highscore()
-jfile["highscore"] = 10
-print(jfile)
-save_highscore()
+# def save_highscore():
+#     with open("highscore.json", "w") as file:
+#         json.dump(jfile, file, indent = 4, sort_keys=True)
+
+# jfile = read_highscore()
+# jfile["highscore"] = 10
+# print(jfile)
+# save_highscore()
 
 # number = 128
 # print(f"number: {number}")

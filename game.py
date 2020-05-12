@@ -16,11 +16,15 @@ RIGHT = 3
 DELAY = 10
 points = 0
 screen_size = 400
+screen_score = (screen_size, 50) 
 game_on =  True
 paused = False
 
 pygame.init()
-screen_game = pygame.display.set_mode((screen_size, screen_size))
+screen_game = pygame.display.set_mode((screen_size, screen_size+50))
+board = pygame.Surface(screen_score)
+board.fill((150, 150, 150))
+
 
 snake = Snake(automatic=False)
 
@@ -29,6 +33,8 @@ apple.set_random_position(screen_size)
 
 my_direction  = RIGHT
 clock = pygame.time.Clock()
+
+
 
 def read_score():
     with open("highscore.json", "r") as file:
@@ -78,7 +84,6 @@ while game_on:
 
     event = pygame.event.get()
     if event: 
-        print(event[0])
         if pygame.key.get_pressed()[K_SPACE]:
             pause_game(True)
         else :
@@ -93,12 +98,13 @@ while game_on:
         DELAY += 0.5
         points += 1
     
-    if apple_time + 4000 < pygame.time.get_ticks():
+    if apple_time + 4500 < pygame.time.get_ticks():
         apple.set_random_position(screen_size)
         apple_time = pygame.time.get_ticks()
     
     
     screen_game.fill((80,80,80))
+    screen_game.blit(board, (0,0))
     score(points)
     highscore(highscore_json["highscore"])
     screen_game.blit(apple.surface, apple.position)
