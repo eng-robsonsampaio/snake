@@ -7,10 +7,6 @@ UP = 0
 DOWN = 1
 LEFT = 2
 RIGHT = 3
-[UP, LEFT, RIGHT]
-[DOWN, LEFT, RIGHT]
-[RIGHT, UP, DOWN]
-[LEFT, UP, DOWN]
 
 class Snake:
 
@@ -36,10 +32,6 @@ class Snake:
             else:
                 self.my_direction = [RIGHT, UP, DOWN][random.randint(0,2)]
 
-    def back_to_automatic(self, screen_size):
-        if self.automatic == False:
-            self.automatic = True
-
     def avoid_the_wall(self, screen_size):
         dist = 30
         if self.automatic:
@@ -47,24 +39,24 @@ class Snake:
                 self.automatic = False
                 print(f"Automatic UP DOWN: {self.automatic}")
                 print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
-                if self.snake[self.lenght-1][1] + dist >= screen_size:
+                if self.snake[self.lenght-1][1] >= screen_size/2:
                     self.my_direction = UP
-                elif self.snake[self.lenght-1][1] - dist <= 0:
+                elif self.snake[self.lenght-1][1] < screen_size/2:
                     self.my_direction = DOWN
-                else:                    
-                    self.my_direction = [UP, DOWN][random.randint(0,1)]
-                    print(f"Manual random: [UP, DOWN] {self.my_direction}")
-            elif self.my_direction == UP and self.snake[self.lenght-1][1]- dist <= 0 or self.my_direction == DOWN and self.snake[self.lenght-1][1]+ dist >= screen_size:
+                # else:                    
+                #     self.my_direction = [UP, DOWN][random.randint(0,1)]
+                #     print(f"Manual random: [UP, DOWN] {self.my_direction}")
+            if self.my_direction == UP and self.snake[self.lenght-1][1] - dist <= 0 or self.my_direction == DOWN and self.snake[self.lenght-1][1] + dist >= screen_size:
                 self.automatic = False
                 print(f"Automatic LEFT RIGHT: {self.automatic}")
                 print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
-                if self.snake[self.lenght-1][0] + dist >= screen_size:
+                if self.snake[self.lenght-1][0] >= screen_size/2:
                     self.my_direction = LEFT
-                elif self.snake[self.lenght-1][0] - dist <= 0:
+                elif self.snake[self.lenght-1][0] < screen_size/2:
                     self.my_direction = RIGHT
-                else:
-                    self.my_direction = [RIGHT, LEFT][random.randint(0,1)]
-                    print(f"Manual random: [LEFT, RIGHT] {self.my_direction}")
+                # else:
+                #     self.my_direction = [RIGHT, LEFT][random.randint(0,1)]
+                #     print(f"Manual random: [LEFT, RIGHT] {self.my_direction}")
             self.automatic = True
 
 
@@ -86,30 +78,36 @@ class Snake:
         self.lenght += 1
     
     def tail_collision(self):
-        collision = self.snake[self.lenght-1] in self.snake[0:self.lenght-3]
-        if collision:
-            print("Tail collision")
-            print(self.snake)
-            print(f"Head: {self.snake[self.lenght-1]}")
-            print(f"Tail: {self.snake[0:self.lenght-2]}")
-            print(f"Collision: {collision}")
-            return True
-        else: 
-            return False
+        # collision = self.snake[self.lenght-1] in self.snake[0:self.lenght-3]
+        for pos in self.snake[:-2]:
+            if pos == self.snake[-1]:
+                print("Tail collision")
+                print(self.snake)
+                print(f"Head: {self.snake[self.lenght-1]}")
+                print(f"Tail: {self.snake[0:self.lenght-2]}")
+                return True
+        # else: 
+        #     return False
+        # if collision:
+        #     print("Tail collision")
+        #     print(self.snake)
+        #     print(f"Head: {self.snake[self.lenght-1]}")
+        #     print(f"Tail: {self.snake[0:self.lenght-2]}")
+        #     print(f"Collision: {collision}")
+        #     return True
+        # else: 
+        #     return False
 
     def crawl(self):
         if self.my_direction == RIGHT:
             self.snake.append((self.snake[self.lenght-1][0] + 10 , self.snake[self.lenght-1][1]))
-            self.snake.pop(0)
         elif self.my_direction == UP:
             self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]- 10))
-            self.snake.pop(0)
         elif self.my_direction == DOWN:
             self.snake.append((self.snake[self.lenght-1][0] , self.snake[self.lenght-1][1]+ 10))
-            self.snake.pop(0)
         elif self.my_direction == LEFT:        
             self.snake.append((self.snake[self.lenght-1][0] - 10 , self.snake[self.lenght-1][1]))
-            self.snake.pop(0)
+        self.snake.pop(0)
         
         
 
@@ -117,16 +115,16 @@ class Snake:
         if event.type == QUIT:
             return False
         if event.type == KEYDOWN:
-            if pygame.key.get_focused() and event.key==K_UP and self.my_direction != DOWN:
+            if event.key==K_UP and self.my_direction != DOWN:
                 print("UP")
                 self.my_direction = UP                
-            elif pygame.key.get_focused() and event.key==K_LEFT and self.my_direction != RIGHT:
+            elif event.key==K_LEFT and self.my_direction != RIGHT:
                 print("LEFT")
                 self.my_direction = LEFT                
-            elif pygame.key.get_focused() and event.key==K_DOWN and self.my_direction != UP:
+            elif event.key==K_DOWN and self.my_direction != UP:
                 print("DOWN")
                 self.my_direction = DOWN                
-            elif pygame.key.get_focused() and event.key==K_RIGHT and self.my_direction != LEFT:
+            elif event.key==K_RIGHT and self.my_direction != LEFT:
                 print("RIGHT")
                 self.my_direction = RIGHT                
         return True

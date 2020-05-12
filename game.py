@@ -60,16 +60,17 @@ def pause_game(paused):
 start_time = pygame.time.get_ticks()
 start = datetime.now().replace(microsecond=0)
 highscore_json = read_score()
+apple_time = pygame.time.get_ticks()
 while game_on:
     clock.tick(DELAY)
 
     snake.crawl()
-    # snake.back_to_automatic(screen_size - 100)
+    snake.avoid_the_wall(screen_size)
 
     if start_time + 500 < pygame.time.get_ticks():
         snake.random_crawl()
         start_time = pygame.time.get_ticks()
-    snake.avoid_the_wall(screen_size)
+    
 
     for event in pygame.event.get():
         game_on = snake.handle_event(event)
@@ -81,9 +82,15 @@ while game_on:
     
     if snake.eat_apple(apple.position):
         apple.set_random_position(screen_size)
+        apple_time = pygame.time.get_ticks()
         snake.snake_bigger()
         DELAY += 0.5
         points += 1
+    
+    if apple_time + 4000 < pygame.time.get_ticks():
+        apple.set_random_position(screen_size)
+        apple_time = pygame.time.get_ticks()
+    
     
     screen_game.fill((30,30,30))
     score(points)
