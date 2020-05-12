@@ -8,6 +8,7 @@ DOWN = 1
 LEFT = 2
 RIGHT = 3
 
+
 class Snake:
 
     def __init__(self, size=(10, 10), color=(255, 255, 255), automatic=False):
@@ -15,6 +16,8 @@ class Snake:
         self.snake = [(200, 200), (210, 200), (220, 200), (230, 200), (240, 200)]
         self.skin = pygame.Surface(size)
         self.skin.fill(color)
+        self.head = pygame.Surface(size)
+        self.head.fill((150, 150, 150))
         self.lenght = 5
         self.my_direction = RIGHT
         self.automatic = automatic
@@ -64,11 +67,7 @@ class Snake:
         return self.snake
 
     def hit_the_wall(self, screen_size):
-        if self.snake[self.lenght-1][0] >= screen_size or self.snake[self.lenght-1][0] < 0 or self.snake[self.lenght-1][1] >= screen_size or self.snake[self.lenght-1][1] < 0:
-            print(self.snake)
-            return True
-        else:
-            return False
+        return self.snake[self.lenght-1][0] >= screen_size or self.snake[self.lenght-1][0] < 0 or self.snake[self.lenght-1][1] >= screen_size or self.snake[self.lenght-1][1] < 0
 
     def eat_apple(self, apple_pos):
         return self.snake[self.lenght-1] == apple_pos
@@ -78,25 +77,7 @@ class Snake:
         self.lenght += 1
     
     def tail_collision(self):
-        # collision = self.snake[self.lenght-1] in self.snake[0:self.lenght-3]
-        for pos in self.snake[:-2]:
-            if pos == self.snake[-1]:
-                print("Tail collision")
-                print(self.snake)
-                print(f"Head: {self.snake[self.lenght-1]}")
-                print(f"Tail: {self.snake[0:self.lenght-2]}")
-                return True
-        # else: 
-        #     return False
-        # if collision:
-        #     print("Tail collision")
-        #     print(self.snake)
-        #     print(f"Head: {self.snake[self.lenght-1]}")
-        #     print(f"Tail: {self.snake[0:self.lenght-2]}")
-        #     print(f"Collision: {collision}")
-        #     return True
-        # else: 
-        #     return False
+        return self.snake[self.lenght-1] in self.snake[0:self.lenght-3]
 
     def crawl(self):
         if self.my_direction == RIGHT:
@@ -126,5 +107,5 @@ class Snake:
                 self.my_direction = DOWN                
             elif event.key==K_RIGHT and self.my_direction != LEFT:
                 print("RIGHT")
-                self.my_direction = RIGHT                
+                self.my_direction = RIGHT   
         return True
