@@ -37,21 +37,21 @@ clock = pygame.time.Clock()
 
 
 def read_score():
-    with open("highscore.json", "r") as file:
+    with open("record.json", "r") as file:
         return json.loads(file.read())
 
 def save_score():
-    with open("highscore.json", "w") as file:
-        json.dump(highscore_json, file, indent = 4, sort_keys=True)
+    with open("record.json", "w") as file:
+        json.dump(record, file, indent = 4, sort_keys=True)
 
 def score(score):
     font = pygame.font.SysFont("comicsansms", 24)
     text = font.render("Score: "+str(score), True, (0, 60, 30))
     screen_game.blit(text, (20,5))
 
-def highscore(highscore):
+def record(score_record):
     font = pygame.font.SysFont("comicsansms", 24)
-    text = font.render("Highscore: "+str(highscore), True, (0, 60, 30))
+    text = font.render("Record: "+str(score_record), True, (0, 60, 30))
     screen_game.blit(text, (200,5))
 
 def pause_game(paused):
@@ -69,7 +69,7 @@ def pause_game(paused):
 
 start_time = pygame.time.get_ticks()
 start = datetime.now().replace(microsecond=0)
-highscore_json = read_score()
+record_json = read_score()
 apple_time = pygame.time.get_ticks()
 
 while game_on:
@@ -106,7 +106,7 @@ while game_on:
     screen_game.fill((80,80,80))
     screen_game.blit(board, (0,0))
     score(points)
-    highscore(highscore_json["highscore"])
+    record(record_json["record"])
     screen_game.blit(apple.surface, apple.position)
 
     for snake_pos in snake.snake[:-1]:
@@ -118,7 +118,7 @@ while game_on:
 pygame.quit()
 print("Game over")
 print("Scores: "+str(points))
-if points > highscore_json["highscore"]:
-    highscore_json["highscore"] = points
+if points > record_json["record"]:
+    record_json["record"] = points
     save_score()
 print(f'\nElapsed time: {datetime.now().replace(microsecond=0) - start}')
