@@ -1,3 +1,3 @@
 
 # Player properties
-HS_FILE = "highscore.txt"
+HS_FILE = "score.txt"

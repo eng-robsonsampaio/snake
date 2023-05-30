@@ -67,7 +67,10 @@ class Snake:
         return self.snake
 
     def hit_the_wall(self, screen_size):
-        return self.snake[self.lenght-1][0] >= screen_size or self.snake[self.lenght-1][0] < 0 or self.snake[self.lenght-1][1] >= screen_size+50 or self.snake[self.lenght-1][1] < 50
+        return ( self.snake[self.lenght-1][0] >= screen_size+50
+                 or self.snake[self.lenght-1][0] < 50
+                 or self.snake[self.lenght-1][1] >= screen_size-200
+                 or self.snake[self.lenght-1][1] < 100)
 
     def eat_apple(self, apple_pos):
         return self.snake[self.lenght-1] == apple_pos
