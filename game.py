@@ -15,13 +15,12 @@ def run_game(screen_game, game_screen_surface):
     DELAY = 10
     points = 0
     screen_size = 700
-    screen_score = (screen_size, 50)
+    screen_score = (screen_size, 30)
     game_on =  True
     paused = False
 
     # screen_game = pygame.display.set_mode((screen_size, screen_size+50))
     board = pygame.Surface(screen_score)
-    print(game_screen_surface.get_size())
     board.fill((180, 180, 180))
 
 
@@ -41,17 +40,17 @@ def run_game(screen_game, game_screen_surface):
 
     def save_score():
         with open("record.json", "w") as file:
-            json.dump(record, file, indent = 4, sort_keys=True)
+            json.dump(record_json, file, indent = 4, sort_keys=True)
 
     def score(score):
         font = pygame.font.SysFont("comicsansms", 24)
         text = font.render("Score: "+str(score), True, (0, 60, 30))
-        screen_game.blit(text, (20,5))
+        screen_game.blit(text, (50,0))
 
-    def record(score_record):
+    def print_record(score_record):
         font = pygame.font.SysFont("comicsansms", 24)
         text = font.render("Record: "+str(score_record), True, (0, 60, 30))
-        screen_game.blit(text, (200,5))
+        screen_game.blit(text, (600,0))
 
     def pause_game(paused):
         """
@@ -88,7 +87,9 @@ def run_game(screen_game, game_screen_surface):
             else :
                 game_on = snake.handle_event(event[0])
 
-        if snake.hit_the_wall(screen_size) or snake.tail_collision() : game_on = False 
+        if snake.hit_the_wall(screen_size) or snake.tail_collision(): 
+            print(snake.get_position())
+            game_on = False 
         
         if snake.eat_apple(apple.position):
             apple.set_random_position(screen_size)
@@ -105,9 +106,9 @@ def run_game(screen_game, game_screen_surface):
         width, height = game_screen_surface.get_size()
         rect = pygame.Rect(50, 100, width, height)  # X, Y, largura, altura
         screen_game.fill((50,80,80), rect)
-        screen_game.blit(board, (0,0))
+        screen_game.blit(board, (50,0))
         score(points)
-        record(record_json["record"])
+        print_record(record_json["record"])
         screen_game.blit(apple.surface, apple.position)
 
         for snake_pos in snake.snake[:-1]:
