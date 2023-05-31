@@ -1,51 +1,54 @@
-import math
-import json
+import pygame
+import sys
 
-with open("teste.json", "a") as file:
-    if not file.read():
-        json.dump(json.loads({"highscore":"0"}), file, indent=4)
-    else:
-        print(file.read())
+# Inicialização do Pygame
+pygame.init()
 
-# def read_highscore():
-#     with open("highscore.json") as file:
-#         return json.loads(file.read())
+# Definição das dimensões da janela
+window_width = 800
+window_height = 600
 
-# def save_highscore():
-#     with open("highscore.json", "w") as file:
-#         json.dump(jfile, file, indent = 4, sort_keys=True)
+# Definição das cores
+white = (255, 255, 255)
+black = (0, 0, 0)
 
-# jfile = read_highscore()
-# jfile["highscore"] = 10
-# print(jfile)
-# save_highscore()
+# Criação da janela
+window = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption('Login')
 
-# number = 128
-# print(f"number: {number}")
-# li = list(chr(number).encode("utf-8"))
-# print(f"List of byte: {li}")
-# dec = int.from_bytes(li, byteorder='big')
-# print(f"Type dec: {type(dec)}")
-# print(f"Value dec: {dec}")
+# Definição das fontes
+font = pygame.font.Font(None, 32)
 
-# print(bytes([195, 136]).decode('utf8'))
+# Variável para armazenar o nome de usuário
+username = ''
 
-# start = 0
-# step = 1
-# stop = 5
-# top_wall = [(min(n+step-1, stop), start) for n in range(start, stop+1, step)]
+# Loop principal do jogo
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                # Remove o último caractere do nome de usuário
+                username = username[:-1]
+            elif event.key == pygame.K_RETURN:
+                # Faz algo com o nome de usuário digitado, como verificar a autenticação
+                print("Nome de usuário:", username)
+            else:
+                # Adiciona o caractere digitado ao nome de usuário
+                username += event.unicode
 
-# String format examples
-# year = 2020
-# event = 'COVID-19'
-# print(f"Results of the {event} in {year}")
+    # Limpa a janela
+    window.fill(white)
 
-# samples = 50
-# acaminho = 23/25
-# indisponivel = 18/25
-# print("A caminho: {:2.2%}\nIndispinivel: {:2.2%}".format(acaminho, indisponivel))
+    # Desenha o campo de entrada do nome de usuário
+    pygame.draw.rect(window, black, (300, 200, 200, 40))
+    pygame.draw.rect(window, white, (305, 205, 190, 30))
 
+    # Desenha o texto digitado pelo usuário
+    text_surface = font.render(username, True, black)
+    window.blit(text_surface, (310, 210))
 
-# table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 7678}
-# for name, phone in table.items():
-#     print(f'{name:6} ==> {phone:6.2f}')
+    # Atualiza a tela
+    pygame.display.flip()

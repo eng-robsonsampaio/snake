@@ -10,10 +10,21 @@ height = 600
 game_screen_width = 700
 game_screen_height = 400
 
+# Definição das dimensões da janela
+log_window_width = 800
+log_window_height = 600
+
+# Definição das cores
+white = (255, 255, 255)
+black = (0, 0, 0)
+
 # Create the screen
 screen = pygame.display.set_mode((width, height))
+log_window = pygame.display.set_mode((log_window_width, log_window_height))
+pygame.display.set_caption('Login')
 
 game_screen = pygame.Surface((game_screen_width, game_screen_height))
+
 
 # Set the window title
 pygame.display.set_caption("Snake Game")
@@ -29,6 +40,7 @@ LIGHT_GREEN = (0, 200, 0)
 # Define fonts
 font_large = pygame.font.Font(None, 48)
 font_small = pygame.font.Font(None, 24)
+log_font = pygame.font.Font(None, 32)
 
 # Define start button dimensions
 button_width = 200
@@ -56,10 +68,6 @@ current_state = START_SCREEN
 # Variable to track hover state
 hovering = False
 
-# # Game screen dimensions
-# game_screen_width = width - 200
-# game_screen_height = height - 200
-
 # Game screen position
 game_screen_x = (width - game_screen_width) // 2
 game_screen_y = (height - game_screen_height) // 2
@@ -68,6 +76,9 @@ print(game_screen_x, game_screen_y)
 
 # Game screen surface
 game_screen_surface = pygame.Surface((game_screen_width, game_screen_height))
+
+# Variável para armazenar o nome de usuário
+username = ''
 
 # Main game loop
 game_running = True
@@ -82,6 +93,19 @@ while game_running:
                     # Transition to the game screen
                     current_state = GAME_SCREEN
 
+    # Limpa a tela
+    log_window.fill(white)
+
+    # Desenha o campo de entrada do nome de usuário
+    pygame.draw.rect(log_window, black, (300, 200, 200, 40))
+    pygame.draw.rect(log_window, white, (305, 205, 190, 30))
+
+    # Desenha o texto digitado pelo usuário
+    text_surface = log_font.render(username, True, black)
+    log_window.blit(text_surface, (310, 210))
+
+    # Atualiza a tela
+    pygame.display.flip()
     # Fill the screen with the background image
     screen.blit(background_image, (0, 0))
 
@@ -108,7 +132,7 @@ while game_running:
         screen.blit(welcome_text, welcome_rect)
 
         # Draw the snake image
-        snake_rect = snake_image.get_rect(center=(width // 2 + 100, height // 2 + 100))
+        snake_rect = snake_image.get_rect(center=(width // 2 + 150, height // 2 + 200))
         screen.blit(snake_image, snake_rect)
 
         # Draw the apple image
