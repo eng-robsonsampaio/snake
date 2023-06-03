@@ -23,7 +23,11 @@ class Snake:
         self.automatic = automatic
         self.random_crawl()
     
-    def random_crawl(self):        
+    def random_crawl(self):
+        """
+        This method makes the snake move randomly 
+        """
+
         if self.automatic == True:
             print(f"Automatic: {self.automatic}")
             if self.my_direction == UP:
@@ -35,27 +39,28 @@ class Snake:
             else:
                 self.my_direction = [RIGHT, UP, DOWN][random.randint(0,2)]
 
-    def avoid_the_wall(self, screen_size):
+    def avoid_the_wall(self, screen_size_x, screen_size_y):
+        
         dist = 30
         if self.automatic:
-            if self.my_direction == LEFT and self.snake[self.lenght-1][0] - dist <= 0 or self.my_direction == RIGHT and self.snake[self.lenght-1][0] + dist >= screen_size:
+            if self.my_direction == LEFT and self.snake[self.lenght-1][0] - dist <= 0 or self.my_direction == RIGHT and self.snake[self.lenght-1][0] + dist >= screen_size_x-50:
                 self.automatic = False
                 print(f"Automatic UP DOWN: {self.automatic}")
                 print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
-                if self.snake[self.lenght-1][1] >= screen_size/2:
+                if self.snake[self.lenght-1][1] >= screen_size_x/2:
                     self.my_direction = UP
-                elif self.snake[self.lenght-1][1] < screen_size/2:
+                elif self.snake[self.lenght-1][1] < screen_size_x/2:
                     self.my_direction = DOWN
                 # else:                    
                 #     self.my_direction = [UP, DOWN][random.randint(0,1)]
                 #     print(f"Manual random: [UP, DOWN] {self.my_direction}")
-            if self.my_direction == UP and self.snake[self.lenght-1][1] - dist <= 0 or self.my_direction == DOWN and self.snake[self.lenght-1][1] + dist >= screen_size:
+            if self.my_direction == UP and self.snake[self.lenght-1][1] - dist <= 0 or self.my_direction == DOWN and self.snake[self.lenght-1][1] + dist >= screen_size_y-200:
                 self.automatic = False
                 print(f"Automatic LEFT RIGHT: {self.automatic}")
                 print(f"({self.snake[self.lenght-1][0]}, {self.snake[self.lenght-1][1]})")
-                if self.snake[self.lenght-1][0] >= screen_size/2:
+                if self.snake[self.lenght-1][0] >= screen_size_y/2:
                     self.my_direction = LEFT
-                elif self.snake[self.lenght-1][0] < screen_size/2:
+                elif self.snake[self.lenght-1][0] < screen_size_y/2:
                     self.my_direction = RIGHT
                 # else:
                 #     self.my_direction = [RIGHT, LEFT][random.randint(0,1)]

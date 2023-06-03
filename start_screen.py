@@ -1,4 +1,5 @@
 import pygame
+import sys
 from game import run_game
 
 # Pygame initialization
@@ -10,21 +11,16 @@ height = 600
 game_screen_width = 700
 game_screen_height = 400
 
-# Definição das dimensões da janela
-log_window_width = 800
-log_window_height = 600
-
 # Definição das cores
 white = (255, 255, 255)
 black = (0, 0, 0)
 
 # Create the screen
 screen = pygame.display.set_mode((width, height))
-log_window = pygame.display.set_mode((log_window_width, log_window_height))
 pygame.display.set_caption('Login')
 
+# This is where the game will be played
 game_screen = pygame.Surface((game_screen_width, game_screen_height))
-
 
 # Set the window title
 pygame.display.set_caption("Snake Game")
@@ -72,8 +68,6 @@ hovering = False
 game_screen_x = (width - game_screen_width) // 2
 game_screen_y = (height - game_screen_height) // 2
 
-print(game_screen_x, game_screen_y)
-
 # Game screen surface
 game_screen_surface = pygame.Surface((game_screen_width, game_screen_height))
 
@@ -92,23 +86,20 @@ while game_running:
                 if button_x < event.pos[0] < button_x + button_width and button_y < event.pos[1] < button_y + button_height:
                     # Transition to the game screen
                     current_state = GAME_SCREEN
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                # Remove o último caractere do nome de usuário
+                username = username[:-1]
+            elif event.key == pygame.K_RETURN:
+                # Faz algo com o nome de usuário digitado, como verificar a autenticação
+                print("Nome de usuário:", username)
+            else:
+                # Adiciona o caractere digitado ao nome de usuário
+                username += event.unicode
 
-    # Limpa a tela
-    log_window.fill(white)
-
-    # Desenha o campo de entrada do nome de usuário
-    pygame.draw.rect(log_window, black, (300, 200, 200, 40))
-    pygame.draw.rect(log_window, white, (305, 205, 190, 30))
-
-    # Desenha o texto digitado pelo usuário
-    text_surface = log_font.render(username, True, black)
-    log_window.blit(text_surface, (310, 210))
-
-    # Atualiza a tela
-    pygame.display.flip()
     # Fill the screen with the background image
     screen.blit(background_image, (0, 0))
-
+    
     if current_state == START_SCREEN:
         # Check if the mouse is hovering over the start button
         if button_x < pygame.mouse.get_pos()[0] < button_x + button_width and button_y < pygame.mouse.get_pos()[1] < button_y + button_height:

@@ -8,13 +8,16 @@ pygame.init()
 window_width = 800
 window_height = 600
 
-# Definição das cores
-white = (255, 255, 255)
-black = (0, 0, 0)
-
 # Criação da janela
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption('Login')
+
+# Carregamento do background image
+background_image = pygame.image.load("images/background_image.jpg")
+
+# Definição das cores
+white = (255, 255, 255)
+black = (0, 0, 0)
 
 # Definição das fontes
 font = pygame.font.Font(None, 32)
@@ -39,16 +42,26 @@ while True:
                 # Adiciona o caractere digitado ao nome de usuário
                 username += event.unicode
 
-    # Limpa a janela
-    window.fill(white)
+    # Blit do background image na tela principal
+    window.blit(background_image, (0, 0))
 
-    # Desenha o campo de entrada do nome de usuário
-    pygame.draw.rect(window, black, (300, 200, 200, 40))
-    pygame.draw.rect(window, white, (305, 205, 190, 30))
+    # Criação de uma nova superfície para o campo de entrada do nome de usuário
+    input_surface = pygame.Surface((200, 40))
+    input_surface.fill(white)
+    input_surface.set_alpha(200)  # Define a transparência da superfície
+    input_rect = input_surface.get_rect()
+    input_rect.center = (window_width // 2, window_height // 3)  # Centraliza o campo de entrada
 
-    # Desenha o texto digitado pelo usuário
+    # Desenha o campo de entrada do nome de usuário na nova superfície
+    pygame.draw.rect(input_surface, black, (5, 5, 190, 30))
+    pygame.draw.rect(input_surface, white, (10, 10, 180, 20))
+
+    # Desenha o texto digitado pelo usuário na nova superfície
     text_surface = font.render(username, True, black)
-    window.blit(text_surface, (310, 210))
+    input_surface.blit(text_surface, (15, 15))
+
+    # Blit da nova superfície sobre a tela principal
+    window.blit(input_surface, input_rect)
 
     # Atualiza a tela
     pygame.display.flip()

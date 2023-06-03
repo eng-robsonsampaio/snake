@@ -74,7 +74,7 @@ def run_game(screen_game, game_screen_surface):
         clock.tick(DELAY)
 
         snake.crawl()
-        # snake.avoid_the_wall(screen_size)
+        # snake.avoid_the_wall(700, 500)
 
         if start_time + 500 < pygame.time.get_ticks():
             snake.random_crawl()
@@ -96,7 +96,7 @@ def run_game(screen_game, game_screen_surface):
             apple_time = pygame.time.get_ticks()
             snake.snake_bigger()
             DELAY += 0.5
-            points += 1
+            points += 5
         
         #Estou acelerando o tempo que a maça aparece
         if apple_time + 4500 < pygame.time.get_ticks():
